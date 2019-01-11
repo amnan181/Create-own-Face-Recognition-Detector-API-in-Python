@@ -14,8 +14,10 @@ def index():
 def upload():
     image = request.files['file']
     image_to_be_matched = face_recognition.load_image_file(image)
-    image_to_be_matched_encoded = face_recognition.face_encodings(
-    image_to_be_matched)[0]
+    try:
+        image_to_be_matched_encoded = face_recognition.face_encodings(image_to_be_matched)[0]
+    except IndexError:
+        return jsonify({'success':'false','message':'No face found in the image'})
     for image in images:
         current_image = face_recognition.load_image_file("images/" + image)
         current_image_encoded = face_recognition.face_encodings(current_image)[0]
